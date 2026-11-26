@@ -56,6 +56,26 @@ class Ayah extends BaseModel
         return $this->hasMany(Translation::class);
     }
 
+    /**
+     * The imported text of ayah 1 of every surah except Al-Fatihah and At-Tawbah is prefixed with the Basmalah.
+     * For display we show the Basmalah as its own line and the ayah proper beneath it. The stored text is untouched.
+     */
+    public function hasLeadingBasmalah(): bool
+    {
+        return $this->number_in_surah === 1 && ! in_array($this->surah_id, [1, 9], true)
+            && str_starts_with($this->text_uthmani, self::basmalah().' ');
+    }
+
+    public function displayText(): string
+    {
+        return $this->hasLeadingBasmalah() ? substr($this->text_uthmani, strlen(self::basmalah()) + 1) : $this->text_uthmani;
+    }
+
+    public static function basmalah(): string
+    {
+        return once(fn () => (string) static::query()->whereKey(1)->value('text_uthmani'));
+    }
+
     public function reference(): string
     {
         return $this->surah_id.':'.$this->number_in_surah;
