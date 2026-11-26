@@ -1,0 +1,6 @@
+<x-layouts.admin title="Support">
+    <div class="flex gap-2 text-sm">@foreach (['' => 'All', 'open' => 'Open', 'pending' => 'Pending', 'resolved' => 'Resolved', 'closed' => 'Closed'] as $key => $label)<a href="{{ route('admin.support.index', $key ? ['status' => $key] : []) }}" class="chip {{ request('status', '') === $key ? 'chip-active' : '' }}">{{ $label }}</a>@endforeach</div>
+    <div class="overflow-x-auto rounded-2xl border border-line bg-white"><table class="w-full text-sm"><thead class="bg-surface-2 text-xs uppercase text-muted"><tr><th class="px-4 py-3 text-start">Request</th><th class="px-4 py-3 text-start">Status</th><th></th></tr></thead>
+        <tbody class="divide-y divide-line">@forelse ($tickets as $ticket)<tr><td class="px-4 py-3"><p class="font-medium">{{ $ticket->subject }}</p><p class="text-xs text-muted">{{ $ticket->user?->name }} · {{ $ticket->category }}</p></td><td class="px-4 py-3"><span class="badge">{{ $ticket->status }}</span></td><td class="px-4 py-3 text-end"><a class="font-semibold text-forest-700" href="{{ route('admin.support.show', $ticket) }}">Open</a></td></tr>@empty<tr><td colspan="3" class="px-4 py-8 text-center text-muted">No tickets.</td></tr>@endforelse</tbody></table></div>
+    {{ $tickets->links() }}
+</x-layouts.admin>

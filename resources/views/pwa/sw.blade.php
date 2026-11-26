@@ -42,6 +42,27 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(req.url);
     if (url.origin !== self.location.origin) return;
 
+    // Same-origin Quran audio. Downloads live in siraj-audio-v1; Range requests are sliced here because
+    // Cache Storage does not answer ranged requests on its own.
+    if (url.pathname.startsWith('/quran-audio/')) {
+        event.respondWith((async () => {
+            const cache = await caches.open('siraj-audio-v1');
+            const hit = await cache.match(url.pathname);
+            if (hit) {
+                const range = req.headers.get('range');
+                if (!range) return hit;
+                const buf = await hit.arrayBuffer();
+                const match = /bytes=(\d+)-(\d*)/.exec(range);
+                const start = match ? Number(match[1]) : 0;
+                const end = match && match[2] ? Number(match[2]) : buf.byteLength - 1;
+                const slice = buf.slice(start, Math.min(end, buf.byteLength - 1) + 1);
+                return new Response(slice, { status: 206, headers: { 'Content-Type': hit.headers.get('Content-Type') || 'audio/mpeg', 'Content-Range': `bytes ${start}-${start + slice.byteLength - 1}/${buf.byteLength}`, 'Accept-Ranges': 'bytes', 'Content-Length': String(slice.byteLength) } });
+            }
+            try { return await fetch(req); } catch (e) { return Response.error(); }
+        })());
+        return;
+    }
+
     if (req.mode === 'navigate') {
         event.respondWith((async () => {
             try {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\UserProvisioner;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,11 @@ class EnsureAccountActive
     public function handle(Request $request, Closure $next, string $guard = 'web'): Response
     {
         $user = Auth::guard($guard)->user();
+        if ($user && $guard === 'web' && ! $user->preferences()->exists()) {
+            app(UserProvisioner::class)->provision($user);
+            $user->unsetRelation('preferences');
+        }
+
         if ($user && $user->status !== 'active') {
             Auth::guard($guard)->logout();
             $request->session()->invalidate();

@@ -1,47 +1,13 @@
-<laravel-boost-guidelines>
-# Laravel Application
+# SIRAJ Muslim
 
-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+Laravel 13 app: public site, member app (`/app`), staff portal (`/admin`) and PWA. Read `docs/PROJECT_ARCHITECTURE.md` before changing structure.
 
-## Prerequisites
+- Quran text is imported and hashed. Do not generate ayah text, and do not write to `ayahs` except through `Ayah::unlockedFor`.
+- Money moves only through `LedgerService`. Do not update `wallets.balance_kobo` on its own.
+- Staff routes need a permission from `app/Support/Permissions.php` and an entry in `app/Support/Navigation.php` when they belong in the menu.
+- New content tables should be added to `app/Admin/Registry.php` instead of a one-off CRUD.
+- Secrets go through `Settings::set(..., encrypted: true)` or an encrypted cast. Never render a stored key.
+- Tests: `php artisan test`. Demo member `ahmed@example.com`, staff `super-admin@sirajmuslim.test`, password `password`.
+- UI tokens live in `resources/css/app.css`. Follow `docs/design/siraj-ui-reference.jpg`. Do not introduce a second visual system for admin.
 
-Verify that PHP and Composer are available:
-
-```sh
-php -v
-composer -V
-```
-
-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
-
-macOS:
-
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
-```
-
-Windows PowerShell:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
-```
-
-Linux:
-
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
-```
-
-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
-
-## Agent Setup
-
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-</laravel-boost-guidelines>
+`CLAUDE.md` points here.

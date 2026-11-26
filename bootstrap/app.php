@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminSurface;
 use App\Http\Middleware\EnsureAccountActive;
+use App\Http\Middleware\EnsureAdminTwoFactor;
 use App\Http\Middleware\EnsureEmailVerifiedWhenRequired;
 use App\Http\Middleware\EnsureOnboarded;
 use App\Http\Middleware\KidsMode;
@@ -33,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'onboarded' => EnsureOnboarded::class,
             'verified.required' => EnsureEmailVerifiedWhenRequired::class,
             'admin.surface' => AdminSurface::class,
+            'admin.2fa' => EnsureAdminTwoFactor::class,
             'kids.mode' => KidsMode::class,
         ]);
     })
