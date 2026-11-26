@@ -1,9 +1,311 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource/cinzel/600.css';
+@import '@fontsource/cinzel/700.css';
+@import '@fontsource/cormorant-garamond/500-italic.css';
+@import '@fontsource/cormorant-garamond/600-italic.css';
+@import '@fontsource/amiri-quran/arabic-400.css';
+@import '@fontsource/amiri-quran/latin-400.css';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@source '../views';
+@source '../../app/Livewire';
 
+/*
+ * SIRAJ design tokens — extracted from docs/design/siraj-ui-reference.jpg.
+ * Brand: deep forest green, premium emerald, white, restrained gold.
+ */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Cinzel', 'Times New Roman', serif;
+    --font-tagline: 'Cormorant Garamond', Georgia, serif;
+    --font-quran: 'Amiri Quran', 'Traditional Arabic', serif;
+
+    --color-forest-950: #00281a;
+    --color-forest-900: #003820;
+    --color-forest-800: #014e2e;
+    --color-forest-700: #0b5f3c;
+    --color-emerald-brand: #087a55;
+    --color-emerald-500: #19a374;
+    --color-emerald-100: #dcefe5;
+    --color-mint-100: #e3f1ea;
+    --color-mint-50: #f0f7f3;
+
+    --color-gold-100: #fbf1d4;
+    --color-gold-200: #f6e3ae;
+    --color-gold-300: #f1cc7b;
+    --color-gold-400: #e4b960;
+    --color-gold-500: #c9a24a;
+    --color-gold-600: #a8842f;
+
+    --color-night-950: #0a1418;
+    --color-night-900: #0f1d23;
+    --color-night-800: #16282f;
+
+    --color-page: var(--page);
+    --color-surface: var(--surface);
+    --color-surface-2: var(--surface-2);
+    --color-line: var(--line);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-mint: var(--mint);
+
+    --radius-card: 1rem;
+    --shadow-card: 0 1px 2px rgb(0 40 26 / 0.04), 0 4px 14px rgb(0 40 26 / 0.06);
+    --shadow-pop: 0 10px 30px rgb(0 40 26 / 0.18);
+
+    --breakpoint-xs: 360px;
+}
+
+:root {
+    --page: #fafbf8;
+    --surface: #ffffff;
+    --surface-2: #eef1ec;
+    --line: #e5eae3;
+    --ink: #0f2e22;
+    --muted: #5b6e66;
+    --mint: #e3f1ea;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+}
+
+.dark {
+    --page: #0b1512;
+    --surface: #12211b;
+    --surface-2: #1a2d25;
+    --line: #223a30;
+    --ink: #eaf3ee;
+    --muted: #9db3a9;
+    --mint: #17332a;
+    color-scheme: dark;
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        font-family: var(--font-sans);
+    }
+    body {
+        background: var(--page);
+        color: var(--ink);
+        overflow-x: hidden;
+        font-feature-settings: 'cv11', 'ss01';
+    }
+    [x-cloak] {
+        display: none !important;
+    }
+    :focus-visible {
+        outline: 2px solid var(--color-emerald-brand);
+        outline-offset: 2px;
+    }
+    button,
+    a,
+    summary {
+        touch-action: manipulation;
+    }
+}
+
+@layer components {
+    /* ---- Surfaces ---- */
+    .card {
+        @apply rounded-card border border-line bg-surface shadow-card;
+    }
+    .card-flat {
+        @apply rounded-card border border-line bg-surface;
+    }
+    .hero-green {
+        background:
+            radial-gradient(120% 90% at 100% 0%, rgb(25 163 116 / 0.28), transparent 60%),
+            linear-gradient(160deg, var(--color-forest-800), var(--color-forest-950));
+        @apply text-white;
+    }
+    .hero-night {
+        background: linear-gradient(180deg, #0a1520 0%, #10202a 55%, #0b1a16 100%);
+        @apply text-white;
+    }
+    .pattern-geo {
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l5.5 11.5L42 18l-9 8.8L35 40l-11-6-11 6 2-13.2L6 18l12.5-2.5z' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'/%3E%3C/svg%3E");
+    }
+
+    /* ---- Buttons (reference: pill-shaped, gold primary on green, dark-green primary on white) ---- */
+    .btn {
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-[15px] font-semibold transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
+    }
+    .btn-primary {
+        @apply bg-forest-700 text-white shadow-sm hover:bg-forest-800;
+    }
+    .btn-gold {
+        background: linear-gradient(180deg, var(--color-gold-200), var(--color-gold-300));
+        @apply text-forest-950 shadow-sm hover:brightness-95;
+    }
+    .btn-outline {
+        @apply border border-line bg-surface text-ink hover:bg-surface-2;
+    }
+    .btn-outline-gold {
+        @apply border border-gold-400/70 text-white hover:bg-white/5;
+    }
+    .btn-soft {
+        @apply bg-mint text-forest-700 hover:brightness-95 dark:text-emerald-100;
+    }
+    .btn-danger {
+        @apply bg-red-600 text-white hover:bg-red-700;
+    }
+    .btn-ghost {
+        @apply text-forest-700 hover:bg-surface-2 dark:text-emerald-100;
+    }
+    .btn-sm {
+        @apply min-h-9 px-4 text-sm;
+    }
+    .btn-block {
+        @apply w-full;
+    }
+
+    /* ---- Forms ---- */
+    .field-label {
+        @apply mb-1.5 block text-sm font-medium text-ink;
+    }
+    .field {
+        @apply block min-h-11 w-full rounded-xl border border-line bg-surface px-3.5 text-[15px] text-ink placeholder:text-muted/70 focus:border-emerald-brand focus:ring-2 focus:ring-emerald-brand/20 focus:outline-none;
+    }
+    textarea.field {
+        @apply min-h-24 py-2.5;
+    }
+    .field-error {
+        @apply mt-1 text-sm text-red-600;
+    }
+    .field-hint {
+        @apply mt-1 text-xs text-muted;
+    }
+
+    /* ---- Chips & tabs (reference: soft grey pills, active = lightly tinted) ---- */
+    .chip {
+        @apply inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-surface-2 px-4 text-sm font-medium text-muted transition hover:text-ink;
+    }
+    .chip[aria-current='page'],
+    .chip-active {
+        @apply bg-mint text-forest-700 dark:text-emerald-100;
+    }
+    .badge {
+        @apply inline-flex items-center gap-1 rounded-full bg-mint px-2.5 py-0.5 text-xs font-semibold text-forest-700 dark:text-emerald-100;
+    }
+    .badge-gold {
+        @apply bg-gold-100 text-[#6b5314];
+    }
+    .badge-check {
+        @apply bg-emerald-100 text-forest-800;
+    }
+    .badge-x {
+        @apply bg-red-50 text-red-700;
+    }
+
+    /* ---- Lists ---- */
+    .list-row {
+        @apply flex min-h-14 items-center gap-3 px-4 py-3 transition hover:bg-surface-2/70;
+    }
+    .divide-soft > * + * {
+        @apply border-t border-line;
+    }
+
+    /* ---- Quran ---- */
+    .quran-text {
+        font-family: var(--font-quran);
+        line-height: 2.35;
+        direction: rtl;
+        text-align: center;
+    }
+
+    .scroll-hide {
+        scrollbar-width: none;
+    }
+    .scroll-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .safe-bottom {
+        padding-bottom: calc(var(--safe-bottom) + 0.25rem);
+    }
+
+    /* ---- Prose for admin-authored lesson content (rendered from sanitised markdown) ---- */
+    .prose-siraj {
+        @apply space-y-3 text-[15px] leading-7 text-ink;
+    }
+    .prose-siraj strong {
+        @apply font-semibold;
+    }
+    .prose-siraj ul {
+        @apply list-disc space-y-1 pl-5;
+    }
+    .prose-siraj ol {
+        @apply list-decimal space-y-1 pl-5;
+    }
+    .prose-siraj h2,
+    .prose-siraj h3 {
+        @apply mt-4 text-lg font-bold;
+    }
+    .prose-siraj blockquote {
+        @apply border-s-4 border-gold-400 ps-3 text-muted;
+    }
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+}
+@utility font-tagline {
+    font-family: var(--font-tagline);
+}
+@utility font-quran {
+    font-family: var(--font-quran);
+}
+
+@keyframes sheet-up {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes shimmer {
+    to {
+        background-position-x: -200%;
+    }
+}
+.skeleton {
+    background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 37%, var(--surface-2) 63%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@layer components {
+    .ayah-marker {
+        @apply inline-grid size-9 place-items-center rounded-full border-2 border-gold-400 bg-gold-100 text-sm font-bold text-forest-900;
+        font-family: var(--font-sans);
+        box-shadow: 0 0 0 3px var(--surface), 0 0 0 4px var(--color-gold-300);
+    }
+    .ayah-marker-sm {
+        @apply size-7 text-xs align-middle;
+        box-shadow: none;
+    }
+    .dark .ayah-marker {
+        @apply bg-forest-800 text-gold-200;
+    }
 }

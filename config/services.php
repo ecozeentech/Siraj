@@ -35,4 +35,23 @@ return [
         ],
     ],
 
+
+    'paystack' => [
+        'mode' => env('PAYSTACK_MODE', 'sandbox'),
+        'public_key' => env('PAYSTACK_PUBLIC_KEY'),
+        'secret_key' => env('PAYSTACK_SECRET_KEY'),
+        'base_url' => 'https://api.paystack.co',
+    ],
+
+    'vapid' => [
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+        'subject' => env('VAPID_SUBJECT', 'mailto:hello@sirajmuslim.com'),
+    ],
+
+    'ai' => [
+        'base_url' => env('AI_OPENAI_BASE_URL', 'https://api.openai.com/v1'),
+        'api_key' => env('AI_OPENAI_API_KEY'),
+    ],
+
 ];

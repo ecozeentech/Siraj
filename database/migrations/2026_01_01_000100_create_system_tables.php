@@ -94,6 +94,17 @@ return new class extends Migration
             $table->index(['broadcast_notification_id', 'status']);
         });
 
+        Schema::create('contact_messages', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+            $table->string('subject');
+            $table->text('message');
+            $table->string('status', 12)->default('new')->index(); // new | handled
+            $table->string('ip_address', 45)->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -109,7 +120,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        foreach (['locations', 'broadcast_deliveries', 'broadcast_notifications', 'support_ticket_replies', 'support_tickets', 'audit_logs', 'media', 'app_settings'] as $t) {
+        foreach (['contact_messages', 'locations', 'broadcast_deliveries', 'broadcast_notifications', 'support_ticket_replies', 'support_tickets', 'audit_logs', 'media', 'app_settings'] as $t) {
             Schema::dropIfExists($t);
         }
     }

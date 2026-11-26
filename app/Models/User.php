@@ -58,6 +58,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(PrayerPreference::class);
     }
 
+    public function qiblaPreference(): HasOne
+    {
+        return $this->hasOne(Worship\QiblaPreference::class);
+    }
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);

@@ -41,6 +41,10 @@ class DemoSeeder extends Seeder
         $amina = $make('Amina Yusuf', 'amina@example.com', 'amina', 'Lagos');
         $reminders = $make('Islamic Reminders', 'reminders@example.com', 'islamicreminders', 'Kano');
 
+        foreach (User::query()->get() as $u) {
+            app(\App\Services\UserProvisioner::class)->provision($u);
+        }
+
         if (! Post::query()->exists()) {
             $p1 = Post::query()->create(['user_id' => $amina->id, 'body' => 'May Allah accept our fast and righteous deeds. Ameen', 'location_label' => 'Lagos, Nigeria']);
             Post::query()->create(['user_id' => $reminders->id, 'body' => 'The key to happiness is closeness to Allah.', 'location_label' => 'Kano, Nigeria']);

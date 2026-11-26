@@ -13,6 +13,21 @@ class Event extends BaseModel
         return ['starts_at' => 'datetime', 'ends_at' => 'datetime', 'latitude' => 'float', 'longitude' => 'float'];
     }
 
+    public function scopePublished($q)
+    {
+        return $q->where('status', 'published');
+    }
+
+    public function scopeUpcoming($q)
+    {
+        return $q->where(fn ($w) => $w->where('ends_at', '>=', now())->orWhere(fn ($x) => $x->whereNull('ends_at')->where('starts_at', '>=', now()->startOfDay())));
+    }
+
+    public function isFree(): bool
+    {
+        return (int) $this->price_kobo === 0;
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(EventCategory::class, 'event_category_id');

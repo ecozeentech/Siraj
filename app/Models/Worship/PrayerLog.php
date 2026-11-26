@@ -8,6 +8,6 @@ class PrayerLog extends BaseModel
 {
     protected function casts(): array
     {
-        return ['day' => 'date', 'in_congregation' => 'boolean', 'prayed_at' => 'datetime'];
+        return ['day' => 'date:Y-m-d', 'in_congregation' => 'boolean', 'prayed_at' => 'datetime'];
     }
 }

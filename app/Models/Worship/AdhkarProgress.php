@@ -10,6 +10,6 @@ class AdhkarProgress extends BaseModel
 
     protected function casts(): array
     {
-        return ['day' => 'date'];
+        return ['day' => 'date:Y-m-d'];
     }
 }
