@@ -63,22 +63,22 @@ Route::middleware(['auth', 'active'])->prefix('app')->name('app.')->group(functi
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [SettingsController::class, 'index'])->name('index');
             Route::get('/account', [SettingsController::class, 'account'])->name('account');
-            Route::post('/account', [SettingsController::class, 'updateAccount'])->name('account.update');
+            Route::put('/account', [SettingsController::class, 'updateAccount'])->name('account.update');
             Route::get('/password', [SettingsController::class, 'password'])->name('password');
-            Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password.update');
+            Route::put('/password', [SettingsController::class, 'updatePassword'])->name('password.update');
             Route::get('/security', [SettingsController::class, 'security'])->name('security');
-            Route::post('/security/sessions', [SettingsController::class, 'endSessions'])->name('security.sessions');
+            Route::delete('/security/sessions', [SettingsController::class, 'endSessions'])->name('security.sessions');
             Route::get('/notifications', [SettingsController::class, 'notifications'])->name('notifications');
-            Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
+            Route::put('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
             Route::get('/appearance', [SettingsController::class, 'appearance'])->name('appearance');
-            Route::post('/appearance', [SettingsController::class, 'updateAppearance'])->name('appearance.update');
+            Route::put('/appearance', [SettingsController::class, 'updateAppearance'])->name('appearance.update');
             Route::get('/quran', [SettingsController::class, 'quran'])->name('quran');
-            Route::post('/quran', [SettingsController::class, 'updateQuran'])->name('quran.update');
+            Route::put('/quran', [SettingsController::class, 'updateQuran'])->name('quran.update');
             Route::get('/privacy', [SettingsController::class, 'privacy'])->name('privacy');
-            Route::post('/privacy', [SettingsController::class, 'updatePrivacy'])->name('privacy.update');
+            Route::put('/privacy', [SettingsController::class, 'updatePrivacy'])->name('privacy.update');
             Route::get('/export', [SettingsController::class, 'export'])->name('export');
             Route::get('/delete', [SettingsController::class, 'delete'])->name('delete');
-            Route::post('/delete', [SettingsController::class, 'destroy'])->name('delete.destroy');
+            Route::delete('/delete', [SettingsController::class, 'destroy'])->name('delete.destroy');
         });
         Route::prefix('support')->name('support.')->group(function () {
             Route::get('/', [SupportController::class, 'index'])->name('index');
