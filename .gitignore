@@ -8,6 +8,7 @@
 /.codex
 /.cursor/*
 !/.cursor/skills/
+.cursor/skills/**/__pycache__/
 /.idea
 /.nova
 /.phpunit.cache
