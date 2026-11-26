@@ -32,14 +32,19 @@
         </main>
     </div>
 
-    {{-- Mobile bottom navigation (reference: Home · Quran · Worship · Learn · More) --}}
-    <nav class="safe-bottom fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface/95 backdrop-blur lg:hidden" aria-label="Primary">
-        <ul class="mx-auto grid max-w-lg grid-cols-5">
+    {{-- Mobile bottom navigation: floating pill, Home · Quran · Worship · Learn · More --}}
+    <nav class="fixed inset-x-0 bottom-0 z-50 px-4 lg:hidden" style="padding-bottom: calc(var(--safe-bottom) + 0.7rem)" aria-label="Primary">
+        <ul class="mx-auto grid max-w-lg grid-cols-5 rounded-[1.7rem] border border-line bg-surface px-1 py-1 shadow-[0_10px_30px_rgb(0_40_26/0.12)]">
             @foreach ($nav as [$label, $route, $icon, $patterns])
                 @php($active = \App\Support\Navigation::isActive($patterns))
                 <li>
-                    <a href="{{ route($route) }}" @if ($active) aria-current="page" @endif class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold {{ $active ? 'text-forest-700 dark:text-emerald-500' : 'text-muted' }}">
-                        <x-dynamic-component :component="'lucide-'.$icon" class="size-[22px]" :stroke-width="$active ? 2.4 : 1.8" />{{ $label }}
+                    <a href="{{ route($route) }}" @if ($active) aria-current="page" @endif class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold {{ $active ? 'text-[#128a49] dark:text-emerald-400' : 'text-muted' }}">
+                        @if ($active && $icon === 'house')
+                            <svg class="size-[22px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.7 2.4a1 1 0 0 0-1.4 0l-8 7.4A1 1 0 0 0 3 10.5V20a1.5 1.5 0 0 0 1.5 1.5H9v-6h6v6h4.5A1.5 1.5 0 0 0 21 20v-9.5a1 1 0 0 0-.3-.7l-8-7.4z"/></svg>
+                        @else
+                            <x-dynamic-component :component="'lucide-'.$icon" class="size-[22px]" :stroke-width="$active ? 2.25 : 1.75" />
+                        @endif
+                        {{ $label }}
                     </a>
                 </li>
             @endforeach
