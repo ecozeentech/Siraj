@@ -279,6 +279,25 @@
         background-position-x: -200%;
     }
 }
+/* Welcome splash. Motion is the drifting light and the mosque windows only. */
+.splash-glow {
+    animation: splash-drift 22s ease-in-out infinite;
+}
+.splash-scene img {
+    animation: splash-drift 26s ease-in-out infinite;
+}
+.splash-mist {
+    animation: splash-twinkle 7s ease-in-out infinite;
+}
+@keyframes splash-drift {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(-2%, 1.5%, 0) scale(1.06); }
+}
+@keyframes splash-twinkle {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+}
+
 .skeleton {
     background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 37%, var(--surface-2) 63%);
     background-size: 200% 100%;

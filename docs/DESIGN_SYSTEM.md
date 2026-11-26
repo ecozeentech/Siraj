@@ -1,6 +1,6 @@
 # SIRAJ Muslim — design system
 
-The visual authority is `docs/design/siraj-ui-reference.jpg` and `docs/design/siraj-logo-reference.webp`. The UI/UX Pro Max skill was not available in this environment and was not used.
+The visual authority for the app is `docs/design/siraj-ui-reference.jpg` and `docs/design/siraj-logo-reference.webp`. The public home splash follows `docs/design/home-splash-reference.jpg`: a full-viewport green field, the stacked wordmark, gold Get Started, outline Sign In, Choose Language, and the mosque along the bottom. Background motion is the drifting glow and the mosque light; `prefers-reduced-motion` stops it. UI and UX checks use `.cursor/skills/ui-ux-pro-max`.
 
 ## Tokens
 
