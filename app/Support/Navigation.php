@@ -72,7 +72,9 @@ final class Navigation
             ],
             'Finance' => [
                 ['Subscriptions', 'admin.subscriptions.index', 'crown', 'subscriptions.manage', ['admin.subscriptions.*']],
+                ['Referrals', 'admin.referrals.index', 'gift', 'subscriptions.manage', ['admin.referrals.*']],
                 ['Payments', 'admin.payments.index', 'credit-card', 'payments.view', ['admin.payments.*']],
+                ['Gateways', 'admin.gateways.index', 'landmark', 'payments.view', ['admin.gateways.*']],
             ],
             'System' => [
                 ['Reports', 'admin.reports.index', 'chart-column', 'reports.view', ['admin.reports.*']],

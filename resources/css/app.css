@@ -61,8 +61,8 @@
     --surface: #ffffff;
     --surface-2: #eef1ec;
     --line: #e5eae3;
-    --ink: #0f2e22;
-    --muted: #5b6e66;
+    --ink: #0c241b;
+    --muted: #24382f;
     --mint: #e3f1ea;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -128,6 +128,18 @@
         background-image:
             url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l5.5 11.5L42 18l-9 8.8L35 40l-11-6-11 6 2-13.2L6 18l12.5-2.5z' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'/%3E%3C/svg%3E");
     }
+    /* The pattern class sets background-image, which would otherwise replace a hero gradient on the same element and leave white text on the page colour. */
+    .hero-green.pattern-geo {
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l5.5 11.5L42 18l-9 8.8L35 40l-11-6-11 6 2-13.2L6 18l12.5-2.5z' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'/%3E%3C/svg%3E"),
+            radial-gradient(120% 90% at 100% 0%, rgb(25 163 116 / 0.28), transparent 60%),
+            linear-gradient(160deg, var(--color-forest-800), var(--color-forest-950));
+    }
+    .hero-night.pattern-geo {
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l5.5 11.5L42 18l-9 8.8L35 40l-11-6-11 6 2-13.2L6 18l12.5-2.5z' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'/%3E%3C/svg%3E"),
+            linear-gradient(180deg, #0a1520 0%, #10202a 55%, #0b1a16 100%);
+    }
 
     /* ---- Buttons (reference: pill-shaped, gold primary on green, dark-green primary on white) ---- */
     .btn {
@@ -167,7 +179,7 @@
         @apply mb-1.5 block text-sm font-medium text-ink;
     }
     .field {
-        @apply block min-h-11 w-full rounded-xl border border-line bg-surface px-3.5 text-[15px] text-ink placeholder:text-muted/70 focus:border-emerald-brand focus:ring-2 focus:ring-emerald-brand/20 focus:outline-none;
+        @apply block min-h-11 w-full rounded-xl border border-line bg-surface px-3.5 text-[15px] text-ink placeholder:text-muted focus:border-emerald-brand focus:ring-2 focus:ring-emerald-brand/20 focus:outline-none;
     }
     textarea.field {
         @apply min-h-24 py-2.5;
@@ -288,6 +300,15 @@
 }
 .splash-mist {
     animation: splash-twinkle 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .icon-pop svg {
+        transition: transform 180ms ease;
+    }
+    .icon-pop:hover svg,
+    .icon-pop:focus-visible svg {
+        transform: translateY(-2px) scale(1.08);
+    }
 }
 /* GSAP owns these once it starts, so the CSS motion does not run as well. */
 .gsap-ready .splash-glow,

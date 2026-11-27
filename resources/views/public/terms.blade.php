@@ -1,4 +1,4 @@
-<x-layouts.public title="Terms of Service">
+<x-layouts.contextual title="Terms of Service">
     <article class="mx-auto max-w-3xl space-y-4 px-4 py-12 lg:px-8">
         <h1 class="text-3xl font-bold">Terms of Service</h1>
         <x-ui.alert type="warning">These terms are a working draft for product development and must be reviewed by qualified legal counsel before public launch.</x-ui.alert>
@@ -11,4 +11,4 @@
         <h2 class="pt-2 text-xl font-bold">Community conduct</h2>
         <p class="leading-7 text-muted">Harassment, hate speech, explicit content and impersonation are not allowed. We may remove content and restrict accounts that violate these rules.</p>
     </article>
-</x-layouts.public>
+</x-layouts.contextual>

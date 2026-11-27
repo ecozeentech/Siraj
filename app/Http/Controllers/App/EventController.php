@@ -18,14 +18,18 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $category = $request->query('category');
+        $tab = in_array($request->query('tab'), ['nearby', 'online'], true) ? $request->query('tab') : 'upcoming';
         $q = trim((string) $request->query('q'));
+        $city = $request->user()->profile?->city;
         $events = Event::query()->published()->upcoming()->with('category')->withCount(['registrations as taken_count' => fn ($w) => $w->whereIn('status', ['registered', 'attended'])])
+            ->when($tab === 'online', fn ($w) => $w->where('mode', 'online'))
+            ->when($tab === 'nearby' && $city, fn ($w) => $w->where('city', $city))
             ->when($category, fn ($w) => $w->whereHas('category', fn ($c) => $c->where('slug', $category)))
             ->when($q !== '', fn ($w) => $w->where(fn ($x) => $x->where('title', 'like', "%{$q}%")->orWhere('city', 'like', "%{$q}%")))
             ->when($request->boolean('free'), fn ($w) => $w->where('price_kobo', 0))
             ->orderBy('starts_at')->paginate(12)->withQueryString();
 
-        return view('app.events.index', ['events' => $events, 'categories' => EventCategory::query()->orderBy('sort')->get(), 'category' => $category, 'q' => $q, 'mine' => EventRegistration::query()->where('user_id', $request->user()->id)->whereIn('status', ['registered', 'waitlisted', 'pending_payment', 'attended'])->pluck('status', 'event_id')]);
+        return view('app.events.index', ['events' => $events, 'categories' => EventCategory::query()->orderBy('sort')->get(), 'category' => $category, 'tab' => $tab, 'q' => $q, 'mine' => EventRegistration::query()->where('user_id', $request->user()->id)->whereIn('status', ['registered', 'waitlisted', 'pending_payment', 'attended'])->pluck('status', 'event_id')]);
     }
 
     public function mine(Request $request)

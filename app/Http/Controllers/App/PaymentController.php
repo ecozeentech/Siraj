@@ -11,7 +11,7 @@ class PaymentController extends Controller
 {
     public function callback(Request $request, PaymentService $payments)
     {
-        $reference = (string) ($request->query('reference') ?: $request->query('trxref'));
+        $reference = (string) ($request->query('reference') ?: $request->query('trxref') ?: $request->query('tx_ref'));
         $tx = PaymentTransaction::query()->where('reference', $reference)->where('user_id', $request->user()->id)->firstOrFail();
 
         try {
@@ -33,5 +33,13 @@ class PaymentController extends Controller
             'failed', 'abandoned' => $dest->with('error', 'The payment was not completed. You have not been charged.'),
             default => $dest->with('error', 'Your payment is still being processed. We will update your account as soon as it is confirmed.'),
         };
+    }
+
+    public function instructions(Request $request, PaymentTransaction $transaction)
+    {
+        abort_unless($transaction->user_id === $request->user()->id, 404);
+        $provider = \App\Models\Finance\PaymentProvider::query()->where('slug', $transaction->gateway)->first();
+
+        return view('app.payments.instructions', ['tx' => $transaction, 'provider' => $provider]);
     }
 }

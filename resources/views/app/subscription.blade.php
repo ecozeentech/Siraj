@@ -11,13 +11,15 @@
                 <section class="card flex flex-col p-5 {{ $p->is_featured ? 'ring-2 ring-gold-400' : '' }}">
                     <div class="flex items-center justify-between"><h2 class="text-lg font-bold">{{ $p->name }}</h2>@if ($p->is_featured)<span class="badge badge-gold">Popular</span>@endif</div>
                     <p class="mt-1 text-sm text-muted">{{ $p->description }}</p>
-                    <p class="mt-3 text-3xl font-bold">{{ $p->price_kobo ? $p->priceFormatted() : 'Free' }}@if ($p->price_kobo)<span class="text-sm font-medium text-muted">/{{ $p->interval }}</span>@endif</p>
+                    <p class="mt-3 text-3xl font-bold">{{ $p->price_kobo ? $p->priceFormatted() : 'Free' }}@if ($p->price_kobo)<span class="text-sm font-semibold text-ink">/{{ $p->interval }}</span>@endif</p>
+                    @if ($p->price_kobo && ($local = \App\Support\Money::local($p->price_kobo)))<p class="text-sm font-semibold text-ink">About {{ $local }}</p>@endif
                     <ul class="mt-4 flex-1 space-y-2 text-sm">@foreach ($p->features ?? [] as $f)<li class="flex gap-2"><x-lucide-check class="mt-0.5 size-4 shrink-0 text-forest-700" />{{ $f }}</li>@endforeach</ul>
                     @if ($isCurrent)<span class="btn btn-soft mt-5 pointer-events-none">Current plan</span>
                     @elseif ($p->price_kobo == 0)<form method="POST" action="{{ route('app.subscription.subscribe', $p) }}" class="mt-5">@csrf<x-ui.button type="submit" variant="outline" block>Switch to Free</x-ui.button></form>
                     @else
                         <form method="POST" action="{{ route('app.subscription.subscribe', $p) }}" class="mt-5 space-y-2" x-data="{ m: '{{ $balance >= $p->price_kobo ? 'wallet' : 'gateway' }}' }">@csrf
                             <select name="method" x-model="m" class="field" aria-label="Payment method"><option value="wallet">Wallet ({{ \App\Support\Money::format($balance) }})</option><option value="gateway" @disabled(! $gatewayReady)>Pay online{{ $gatewayReady ? '' : ' (not configured)' }}</option></select>
+                            <select name="gateway" x-show="m === 'gateway'" class="field" aria-label="Payment gateway">@foreach ($providers as $provider)<option value="{{ $provider->slug }}">{{ $provider->name }}</option>@endforeach</select>
                             <x-ui.button type="submit" :variant="$p->is_featured ? 'gold' : 'primary'" block>Subscribe</x-ui.button></form>
                     @endif
                 </section>

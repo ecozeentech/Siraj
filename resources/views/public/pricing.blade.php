@@ -1,4 +1,4 @@
-<x-layouts.public title="Pricing">
+<x-layouts.contextual title="Pricing">
     <section class="mx-auto max-w-6xl px-4 py-12 lg:px-8">
         <h1 class="text-3xl font-bold">Simple pricing</h1>
         <p class="mt-2 text-muted">Start free. Upgrade to SIRAJ Plus for premium learning, family profiles and higher AI limits.</p>
@@ -18,4 +18,4 @@
         </div>
         @if ($plans->isEmpty())<x-ui.empty icon="crown" title="Plans coming soon" text="Subscription plans haven't been published yet." />@endif
     </section>
-</x-layouts.public>
+</x-layouts.contextual>

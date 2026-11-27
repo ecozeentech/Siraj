@@ -2,7 +2,7 @@
     <x-slot:header><x-ui.page-header title="Reading goal" subtitle="Small, steady steps" :back="route('app.quran.index')" /></x-slot:header>
     <div class="mx-auto max-w-xl space-y-4 py-5">
         <div class="grid grid-cols-2 gap-3">
-            <div class="card p-4 text-center"><x-lucide-flame class="mx-auto size-6 text-gold-500" /><p class="mt-2 text-3xl font-bold">{{ $streak }}</p><p class="text-xs text-muted">day streak</p></div>
+            <div class="card p-4 text-center"><x-lucide-flame class="streak-flame mx-auto size-8 text-gold-500" /><p class="streak-count mt-2 text-3xl font-bold" data-value="{{ $streak }}">{{ $streak }}</p><p class="text-xs font-semibold text-ink">day streak</p></div>
             <div class="card p-4 text-center"><x-lucide-target class="mx-auto size-6 text-forest-700" /><p class="mt-2 text-3xl font-bold">{{ $progress ? $progress['read_today'] : 0 }}</p><p class="text-xs text-muted">ayahs today</p></div>
         </div>
         @if ($progress)

@@ -27,7 +27,9 @@ use App\Http\Controllers\App\SyncController;
 use App\Http\Controllers\App\WalletController;
 use App\Http\Controllers\App\WorshipController;
 use App\Http\Controllers\App\ZakatController;
+use App\Http\Controllers\App\ReferralController;
 use App\Http\Controllers\Public\CertificateController;
+use App\Http\Controllers\Public\PageController;
 use Illuminate\Support\Facades\Route;
 
 // Public, same-origin audio proxy (the audio CDN sends no CORS headers) and public certificate verification.
@@ -48,6 +50,18 @@ Route::middleware(['auth', 'active'])->prefix('app')->name('app.')->group(functi
         Route::get('/', HomeController::class)->name('home');
         Route::get('/more', MoreController::class)->name('more');
         Route::get('/about', AboutController::class)->name('about');
+        Route::post('/theme', [SettingsController::class, 'theme'])->name('theme');
+        Route::get('/referrals', [ReferralController::class, 'index'])->name('referrals');
+        Route::post('/referrals/redeem', [ReferralController::class, 'redeem'])->name('referrals.redeem');
+        Route::get('/payments/{transaction}/instructions', [PaymentController::class, 'instructions'])->name('payments.instructions');
+        Route::prefix('explore')->name('explore.')->group(function () {
+            Route::get('/features', [PageController::class, 'features'])->name('features');
+            Route::get('/pricing', [PageController::class, 'pricing'])->name('pricing');
+            Route::get('/about', [PageController::class, 'about'])->name('about');
+            Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+            Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
+            Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+        });
 
         // Notifications & push
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');

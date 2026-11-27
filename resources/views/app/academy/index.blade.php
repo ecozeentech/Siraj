@@ -2,7 +2,11 @@
     <x-slot:header>
         <header class="hero-green pattern-geo px-4 pb-6 lg:rounded-b-[2rem] lg:px-8" style="padding-top: calc(1rem + var(--safe-top))">
             <div class="mx-auto max-w-6xl">
-                <div class="flex items-center gap-3"><div class="min-w-0 flex-1"><h1 class="text-xl font-bold">Islamic Academy</h1><p class="text-sm text-white/75">Learn. Grow. Apply.</p></div><x-ui.bell /></div>
+                <div class="flex items-center gap-3">
+                    <span class="grid size-11 place-items-center rounded-full bg-white/15"><x-lucide-graduation-cap class="size-5 text-gold-200" /></span>
+                    <div class="min-w-0 flex-1"><h1 class="text-xl font-bold">Islamic Academy</h1><p class="text-sm text-white">Learn. Grow. Apply.</p></div>
+                    <x-ui.bell />
+                </div>
                 @if ($featured)
                     <div class="relative mt-4 overflow-hidden rounded-2xl border border-white/15 bg-forest-950/40 p-5">
                         <x-lucide-book-open class="pointer-events-none absolute -bottom-3 end-3 size-36 text-gold-300/25" stroke-width="1" />

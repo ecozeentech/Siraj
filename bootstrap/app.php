@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin', 'admin/*') ? route('admin.login') : route('login'));
         $middleware->redirectUsersTo(fn (Request $request) => $request->is('admin', 'admin/*') ? route('admin.dashboard') : route('app.home'));
+        $middleware->web(append: [\App\Http\Middleware\RequestContext::class]);
         $middleware->trustProxies(at: '*');
         $middleware->validateCsrfTokens(except: ['webhooks/paystack']);
         $middleware->alias([

@@ -42,7 +42,7 @@ class AdminPortalTest extends TestCase
         $this->asStaff($content)->get('/admin/worship')->assertOk();
 
         $admin = $this->staff('super-admin@sirajmuslim.test');
-        foreach (['/admin', '/admin/users', '/admin/roles', '/admin/support', '/admin/community', '/admin/notifications', '/admin/ai', '/admin/payments', '/admin/subscriptions', '/admin/reports', '/admin/audit', '/admin/settings', '/admin/quran', '/admin/worship', '/admin/academy', '/admin/kids', '/admin/events', '/admin/directories'] as $path) {
+        foreach (['/admin', '/admin/users', '/admin/roles', '/admin/support', '/admin/community', '/admin/notifications', '/admin/ai', '/admin/payments', '/admin/gateways', '/admin/referrals', '/admin/subscriptions', '/admin/reports', '/admin/audit', '/admin/settings', '/admin/quran', '/admin/worship', '/admin/academy', '/admin/kids', '/admin/events', '/admin/directories'] as $path) {
             $this->asStaff($admin)->get($path)->assertOk();
         }
 

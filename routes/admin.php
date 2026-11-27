@@ -67,6 +67,16 @@ Route::middleware('admin.surface')->group(function () {
             Route::get('ai', [PlatformController::class, 'ai'])->middleware('permission:ai.usage')->name('ai.index');
 
             Route::middleware('permission:payments.view')->get('payments', [FinanceController::class, 'payments'])->name('payments.index');
+            Route::middleware('permission:payments.view')->get('gateways', [FinanceController::class, 'gateways'])->name('gateways.index');
+            Route::middleware('permission:finance.adjust')->group(function () {
+                Route::put('gateways/{provider}', [FinanceController::class, 'updateGateway'])->name('gateways.update');
+                Route::post('gateways', [FinanceController::class, 'storeGateway'])->name('gateways.store');
+                Route::post('payments/{transaction}/confirm', [FinanceController::class, 'confirmPayment'])->name('payments.confirm');
+            });
+            Route::middleware('permission:subscriptions.manage')->group(function () {
+                Route::get('referrals', [FinanceController::class, 'referrals'])->name('referrals.index');
+                Route::put('referrals', [FinanceController::class, 'updateReferrals'])->name('referrals.update');
+            });
             Route::post('payments/refunds/{refund}', [FinanceController::class, 'refund'])->middleware('permission:payments.refund')->name('payments.refund');
             Route::post('payments/adjust', [FinanceController::class, 'adjust'])->middleware('permission:finance.adjust')->name('payments.adjust');
             Route::get('subscriptions', [FinanceController::class, 'subscriptions'])->middleware('permission:subscriptions.manage')->name('subscriptions.index');

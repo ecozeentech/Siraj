@@ -52,7 +52,7 @@ class RefundService
                     ['account' => $this->ledger->ensureUserAccount($wallet), 'direction' => 'credit', 'amount' => $refund->amount_kobo],
                 ], 'Refund to wallet', 'refund:'.$refund->id, $refund, $tx->currency);
             } else {
-                $result = $this->gateway->refund($tx, $refund->amount_kobo, $refund->reason);
+                $result = app(GatewayCatalog::class)->make($tx->gateway)->refund($tx, $refund->amount_kobo, $refund->reason);
                 $this->ledger->post([
                     ['account' => $revenue, 'direction' => 'debit', 'amount' => $refund->amount_kobo],
                     ['account' => 'system:gateway_clearing', 'direction' => 'credit', 'amount' => $refund->amount_kobo],

@@ -7,6 +7,7 @@ use App\Models\Finance\PaymentTransaction;
 use App\Models\Finance\Refund;
 use App\Models\Finance\WalletTransaction;
 use App\Services\Finance\GatewayNotConfiguredException;
+use App\Services\Finance\GatewayCatalog;
 use App\Services\Finance\PaymentGateway;
 use App\Services\Finance\PaymentService;
 use App\Services\Finance\RefundService;
@@ -15,13 +16,14 @@ use Illuminate\Validation\Rule;
 
 class WalletController extends Controller
 {
-    public function index(Request $request, PaymentGateway $gateway)
+    public function index(Request $request, PaymentGateway $gateway, GatewayCatalog $catalog)
     {
         $user = $request->user();
         $wallet = $user->wallet;
+        $providers = $catalog->checkoutOptions();
 
         return view('app.wallet.index', [
-            'wallet' => $wallet, 'gatewayReady' => $gateway->isConfigured(), 'mode' => $gateway->isConfigured() ? $gateway->mode() : null,
+            'wallet' => $wallet, 'gatewayReady' => $providers->isNotEmpty(), 'mode' => $gateway->isConfigured() ? $gateway->mode() : null, 'providers' => $providers,
             'entries' => WalletTransaction::query()->where('wallet_id', $wallet->id)->latest('id')->paginate(10, ['*'], 'entries'),
             'payments' => PaymentTransaction::query()->where('user_id', $user->id)->with('refunds')->latest('id')->paginate(10, ['*'], 'payments'),
             'subscription' => $user->activeSubscription?->load('plan'),
@@ -30,9 +32,9 @@ class WalletController extends Controller
 
     public function topUp(Request $request, PaymentService $payments)
     {
-        $data = $request->validate(['amount' => ['required', 'numeric', 'min:100', 'max:1000000']]);
+        $data = $request->validate(['amount' => ['required', 'numeric', 'min:100', 'max:1000000'], 'gateway' => ['nullable', 'string', 'max:24']]);
         try {
-            $tx = $payments->initiate($request->user(), 'wallet_topup', (int) round($data['amount'] * 100));
+            $tx = $payments->initiate($request->user(), 'wallet_topup', (int) round($data['amount'] * 100), null, [], $data['gateway'] ?? null);
         } catch (GatewayNotConfiguredException $e) {
             return back()->withErrors(['amount' => $e->getMessage()]);
         } catch (\Throwable $e) {

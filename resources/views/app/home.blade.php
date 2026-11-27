@@ -2,25 +2,30 @@
     $names = ['fajr' => 'Fajr', 'dhuhr' => 'Dhuhr', 'asr' => 'Asr', 'maghrib' => 'Maghrib', 'isha' => 'Isha'];
     $first = \Illuminate\Support\Str::of($user->name)->before(' ')->toString();
     $event = $events->first();
+    $dark = ($user->preferences?->theme ?? 'light') === 'dark';
 @endphp
 <x-layouts.app title="Home" flush headerless>
     <section class="relative overflow-hidden text-white" style="padding-top: var(--safe-top); background: radial-gradient(120% 80% at 80% 0%, #1f8a4c 0%, #0d6a38 42%, #064e2a 100%)">
         <div class="pattern-geo pointer-events-none absolute inset-x-0 top-0 h-40 opacity-80"></div>
-        <div class="relative mx-auto max-w-md px-4 pb-1.5 pt-1">
-            <div class="flex items-center justify-end gap-2.5">
-                <x-ui.bell dot plain />
-                <a href="{{ route('app.profile.show') }}" aria-label="Profile"><x-ui.avatar :user="$user" size="md" class="ring-2 ring-white" /></a>
-            </div>
-
-            <div class="relative mt-1.5 overflow-hidden rounded-[1.35rem] border border-white/25 bg-gradient-to-r from-[#0c6a38] to-[#147a40] px-4 py-2.5 shadow-card">
-                <img src="{{ asset('images/dash-greet-mosque.png') }}" alt="" class="pointer-events-none absolute inset-y-0 right-0 h-full w-[52%] object-cover object-right">
-                <div class="relative">
-                    <p class="text-[15px] font-medium leading-tight text-white/95">Assalamu Alaikum,</p>
-                    <p class="text-[1.35rem] font-bold leading-tight">{{ $first }} <span aria-hidden="true">👋</span></p>
-                    <p class="mt-1.5 flex items-center gap-1.5 whitespace-nowrap text-[11px] tracking-tight text-white/90">
+        <div class="relative mx-auto max-w-md px-4 pb-1.5 pt-3">
+            <div class="flex items-start gap-3">
+                <div class="min-w-0 flex-1 pt-0.5">
+                    <p class="text-[15px] font-medium leading-tight text-white">{{ __('Assalamu Alaikum,') }}</p>
+                    <p class="text-[1.45rem] font-bold leading-tight">{{ $first }} <span aria-hidden="true">👋</span></p>
+                    <p class="mt-1.5 flex items-center gap-1.5 text-[12px] text-white">
                         <x-lucide-calendar class="size-3.5 shrink-0" />
-                        <span>{{ $now->format('D, j M Y') }} • {{ $hijri }}</span>
+                        <span>{{ $now->format('D, j M Y') }} · {{ $hijri }}</span>
                     </p>
+                </div>
+                <div class="flex shrink-0 items-center gap-2">
+                    <form method="POST" action="{{ route('app.theme') }}">@csrf
+                        <input type="hidden" name="theme" value="{{ $dark ? 'light' : 'dark' }}">
+                        <button type="submit" class="icon-pop grid size-11 place-items-center rounded-full bg-white/15 text-white" aria-label="{{ $dark ? 'Switch to light mode' : 'Switch to dark mode' }}">
+                            @if ($dark)<x-lucide-sun class="size-5" />@else<x-lucide-moon class="size-5" />@endif
+                        </button>
+                    </form>
+                    <x-ui.bell dot plain />
+                    <a href="{{ route('app.profile.show') }}" class="icon-pop" aria-label="Profile"><x-ui.avatar :user="$user" size="md" class="ring-2 ring-white" /></a>
                 </div>
             </div>
 

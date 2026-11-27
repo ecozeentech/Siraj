@@ -11,11 +11,11 @@
                 @auth
                     <x-ui.button :href="route('app.home')" variant="gold" block class="min-h-12 text-base font-bold">Open SIRAJ</x-ui.button>
                 @else
-                    <x-ui.button :href="route('register')" variant="gold" block class="min-h-12 text-base font-bold">Get Started</x-ui.button>
-                    <x-ui.button :href="route('login')" variant="outline-gold" block class="min-h-12 border-2 border-[#e4c56a] text-base font-semibold">Sign In</x-ui.button>
+                    <x-ui.button :href="route('register')" variant="gold" block class="min-h-12 text-base font-bold">{{ __('Get Started') }}</x-ui.button>
+                    <x-ui.button :href="route('login')" variant="outline-gold" block class="min-h-12 border-2 border-[#e4c56a] text-base font-semibold">{{ __('Sign In') }}</x-ui.button>
                 @endauth
                 <button type="button" @click="$dispatch('open-sheet', 'language')" class="mx-auto mt-1 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-white">
-                    Choose Language <x-lucide-chevron-down class="size-4" />
+                    {{ __('Choose Language') }} <x-lucide-chevron-down class="size-4" />
                 </button>
             </div>
         </div>
@@ -35,16 +35,18 @@
     </section>
 
     <section class="bg-mint/60">
-        <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-14 text-center lg:flex-row lg:justify-between lg:px-8 lg:text-start">
-            <div>
-                <h2 class="text-2xl font-bold text-ink">Install SIRAJ on your phone</h2>
-                <p class="mt-2 max-w-lg text-muted">SIRAJ is a Progressive Web App: install it from your browser for a full-screen experience and offline Quran reading. No app store required.</p>
+        <div class="mx-auto max-w-3xl px-4 py-14 text-center">
+            <h2 class="text-2xl font-bold text-ink">{{ __('Take SIRAJ with you') }}</h2>
+            <div x-data="pwaStatus()" x-init="init()" class="mt-6 grid gap-3 sm:grid-cols-3">
+                <button type="button" @click="canInstall ? install() : document.getElementById('pwa-help').showModal()" class="icon-pop flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#128a49] px-4 font-bold text-white"><x-lucide-smartphone class="size-5" />{{ __('PWA') }}</button>
+                <a href="{{ config('siraj.stores.play') }}" class="icon-pop flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-ink px-4 font-bold text-white" rel="noopener"><x-lucide-play class="size-5" />{{ __('Play Store') }}</a>
+                <a href="{{ config('siraj.stores.apple') }}" class="icon-pop flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-white px-4 font-bold text-ink ring-1 ring-line" rel="noopener"><x-lucide-apple class="size-5" />{{ __('Apple Store') }}</a>
             </div>
-            <div x-data="pwaStatus()" x-init="init()" class="flex flex-col items-center gap-2">
-                <button x-show="canInstall" @click="install()" class="btn btn-primary" x-cloak><x-lucide-download class="size-4" />Install app</button>
-                <p x-show="!canInstall" class="max-w-xs text-sm text-muted"><strong>Android / desktop Chrome &amp; Edge:</strong> use the browser menu → “Install app”. <strong>iPhone:</strong> Share → “Add to Home Screen”.</p>
-                <p class="text-xs text-muted">Google Play and App Store apps: coming later.</p>
-            </div>
+            <dialog id="pwa-help" class="max-w-sm rounded-2xl p-5 text-start text-ink backdrop:bg-black/40">
+                <p class="font-bold">{{ __('Install app') }}</p>
+                <p class="mt-2 text-sm">On Chrome or Edge, open the browser menu and choose Install app. On iPhone, tap Share, then Add to Home Screen.</p>
+                <form method="dialog" class="mt-4"><button class="btn btn-primary">Close</button></form>
+            </dialog>
         </div>
     </section>
 
@@ -53,9 +55,8 @@
     <x-ui.sheet name="language" title="Choose language">
         <form method="POST" action="{{ route('language') }}" class="space-y-2">@csrf
             @foreach (config('siraj.supported_locales') as $code => $label)
-                <button name="locale" value="{{ $code }}" class="flex w-full items-center justify-between rounded-xl border border-line px-4 py-3 text-start font-medium">{{ $label }}<x-lucide-check class="size-5 text-forest-700" /></button>
+                <button name="locale" value="{{ $code }}" class="icon-pop flex min-h-12 w-full items-center justify-between rounded-xl border border-line px-4 text-start font-semibold text-ink">{{ $label }}@if (app()->getLocale() === $code)<x-lucide-check class="size-5 text-[#128a49]" />@endif</button>
             @endforeach
-            <p class="pt-2 text-sm text-muted">More interface languages are planned. You can already choose your preferred Quran translation language after signing up.</p>
         </form>
     </x-ui.sheet>
 </x-layouts.base>
