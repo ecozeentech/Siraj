@@ -143,9 +143,18 @@ class SettingsController extends Controller
     public function updateAppearance(Request $request)
     {
         $d = $request->validate(['theme' => ['required', Rule::in(['light', 'dark', 'system'])], 'language' => ['required', Rule::in(array_keys(config('siraj.supported_locales')))]]);
-        $request->user()->preferences()->updateOrCreate([], $d);
+        $request->user()->preferences()->updateOrCreate(['user_id' => $request->user()->id], $d);
+        $request->session()->put('locale', $d['language']);
 
         return back()->with('status', 'Appearance saved.');
+    }
+
+    public function theme(Request $request)
+    {
+        $theme = $request->validate(['theme' => ['required', Rule::in(['light', 'dark', 'system'])]])['theme'];
+        $request->user()->preferences()->updateOrCreate(['user_id' => $request->user()->id], ['theme' => $theme]);
+
+        return back();
     }
 
     public function quran(Request $request)

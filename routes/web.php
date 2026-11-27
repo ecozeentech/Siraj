@@ -29,6 +29,7 @@ Route::get('/offline/adhkar', [PwaController::class, 'offlineAdhkar'])->name('pw
 
 // ---- Payment gateway webhooks (signature verified inside the controller) ----
 Route::post('/webhooks/paystack', [PaymentWebhookController::class, 'paystack'])->middleware('throttle:webhooks')->name('webhooks.paystack');
+Route::post('/webhooks/opay', fn () => response()->json(['received' => true]))->middleware('throttle:webhooks')->name('webhooks.opay');
 
 // ---- Authentication ----
 Route::middleware('guest')->group(function () {

@@ -31,6 +31,7 @@ class RegisterController extends Controller
             'name' => $data['name'], 'email' => strtolower($data['email']), 'phone' => $data['phone'] ?? null, 'password' => $data['password'],
         ]);
         $provisioner->provision($user);
+        app(\App\Services\Finance\ReferralService::class)->attribute($user, $request->session()->pull('referral_code'));
 
         event(new Registered($user));
         Auth::login($user);

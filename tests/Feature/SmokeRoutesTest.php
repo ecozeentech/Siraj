@@ -31,7 +31,9 @@ class SmokeRoutesTest extends TestCase
             '/app/zakat', '/app/hajj-umrah', '/app/academy', '/app/family', '/app/kids',
             '/app/ai', '/app/community', '/app/community?tab=following', '/app/community?tab=popular', '/app/community/people', '/app/community/groups',
             '/app/messages', '/app/events', '/app/events/mine', '/app/directory', '/app/directory?tab=businesses', '/app/directory?tab=halal', '/app/directory/submit', '/app/directory?lat=6.5&lng=3.3',
-            '/app/wallet', '/app/subscription', '/offline', '/offline/quran', '/offline/adhkar', '/manifest.webmanifest', '/sw.js',
+            '/app/wallet', '/app/subscription', '/app/referrals',
+            '/app/explore/features', '/app/explore/pricing', '/app/explore/about', '/app/explore/contact', '/app/explore/privacy', '/app/explore/terms',
+            '/offline', '/offline/quran', '/offline/adhkar', '/manifest.webmanifest', '/sw.js',
         ];
         if ($c = Course::query()->first()) {
             $paths[] = '/app/academy/'.$c->slug;

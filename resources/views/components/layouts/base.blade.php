@@ -3,7 +3,7 @@
     $theme = auth()->user()?->preferences?->theme ?? 'light';
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr" data-theme="{{ $theme }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ in_array(app()->getLocale(), config('siraj.rtl_locales'), true) ? 'rtl' : 'ltr' }}" data-theme="{{ $theme }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

@@ -63,6 +63,9 @@ class PageController extends Controller
     {
         $request->validate(['locale' => ['required', 'in:'.implode(',', array_keys(config('siraj.supported_locales')))]]);
         $request->session()->put('locale', $request->input('locale'));
+        if ($request->user()?->preferences) {
+            $request->user()->preferences()->update(['language' => $request->input('locale')]);
+        }
 
         return back();
     }

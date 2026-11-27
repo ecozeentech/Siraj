@@ -12,7 +12,7 @@
                     @foreach ($items as [$label, $route, $icon, $patterns])
                         @php($active = \App\Support\Navigation::isActive($patterns))
                         <a href="{{ route($route) }}" @if ($active) aria-current="page" @endif class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition {{ $active ? 'bg-white/10 text-gold-300' : 'text-white/75 hover:bg-white/5 hover:text-white' }}">
-                            <x-dynamic-component :component="'lucide-'.$icon" class="size-[18px]" />{{ $label }}
+                            <x-dynamic-component :component="'lucide-'.$icon" class="size-[18px]" />{{ __($label) }}
                         </a>
                     @endforeach
                 </div>
@@ -38,13 +38,13 @@
             @foreach ($nav as [$label, $route, $icon, $patterns])
                 @php($active = \App\Support\Navigation::isActive($patterns))
                 <li>
-                    <a href="{{ route($route) }}" @if ($active) aria-current="page" @endif class="flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold {{ $active ? 'text-[#128a49] dark:text-emerald-400' : 'text-muted' }}">
+                    <a href="{{ route($route) }}" @if ($active) aria-current="page" @endif class="icon-pop flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold {{ $active ? 'text-[#128a49] dark:text-emerald-400' : 'text-ink' }}">
                         @if ($active && $icon === 'house')
                             <svg class="size-[22px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.7 2.4a1 1 0 0 0-1.4 0l-8 7.4A1 1 0 0 0 3 10.5V20a1.5 1.5 0 0 0 1.5 1.5H9v-6h6v6h4.5A1.5 1.5 0 0 0 21 20v-9.5a1 1 0 0 0-.3-.7l-8-7.4z"/></svg>
                         @else
                             <x-dynamic-component :component="'lucide-'.$icon" class="size-[22px]" :stroke-width="$active ? 2.25 : 1.75" />
                         @endif
-                        {{ $label }}
+                        {{ __($label) }}
                     </a>
                 </li>
             @endforeach

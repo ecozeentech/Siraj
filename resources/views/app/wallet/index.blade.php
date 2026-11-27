@@ -4,6 +4,7 @@
             <div class="mx-auto mt-4 max-w-6xl rounded-3xl bg-white/10 p-5">
                 <p class="text-sm text-white/70">Wallet balance</p>
                 <p class="text-4xl font-bold tracking-tight">{{ \App\Support\Money::format($wallet->balance_kobo, $wallet->currency) }}</p>
+                @if ($local = \App\Support\Money::local($wallet->balance_kobo))<p class="text-sm text-white">About {{ $local }}, from today’s mid-market rate. Charges stay in naira.</p>@endif
                 <p class="mt-2 text-sm text-white/70">Plan: <strong class="text-gold-300">{{ $subscription?->plan?->name ?? 'Free' }}</strong> · <a href="{{ route('app.subscription.index') }}" class="underline">Manage</a></p>
             </div>
         </x-ui.page-header>
@@ -18,6 +19,9 @@
                     <form method="POST" action="{{ route('app.wallet.topup') }}" class="space-y-3" x-data="{ a: '' }">@csrf
                         <div class="flex gap-2">@foreach ([1000, 2000, 5000, 10000] as $p)<button type="button" class="chip flex-1 justify-center" @click="a = {{ $p }}">₦{{ number_format($p) }}</button>@endforeach</div>
                         <x-ui.input name="amount" type="number" min="100" max="1000000" step="1" label="Amount (NGN)" required x-model="a" hint="Minimum ₦100" />
+                        <label class="block text-sm font-semibold text-ink">Payment method
+                            <select name="gateway" class="field mt-1">@foreach ($providers as $provider)<option value="{{ $provider->slug }}">{{ $provider->name }}</option>@endforeach</select>
+                        </label>
                         <x-ui.button type="submit" block icon="wallet">Continue to payment</x-ui.button>
                     </form>
                 @endif

@@ -1,13 +1,17 @@
-<x-layouts.app title="Community">
-    <x-slot:header>
-        <x-ui.page-header title="Community" subtitle="Connect with the Ummah" :back="route('app.more')">
-            <x-slot:actions><a href="{{ route('app.community.people') }}" class="grid size-10 place-items-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Find people"><x-lucide-user-search class="size-5" /></a></x-slot:actions>
-            <nav class="mx-auto mt-4 flex max-w-6xl gap-2 text-sm font-semibold" aria-label="Community sections">
-                @foreach (['latest' => 'Feed', 'following' => 'Following', 'popular' => 'Popular'] as $k => $l)<a href="{{ route('app.community.index', ['tab' => $k]) }}" class="rounded-full px-4 py-1.5 {{ $tab === $k ? 'bg-white text-forest-800' : 'bg-white/10 text-white' }}">{{ $l }}</a>@endforeach
-                <a href="{{ route('app.community.groups.index') }}" class="rounded-full bg-white/10 px-4 py-1.5">Groups</a>
-            </nav>
-        </x-ui.page-header>
-    </x-slot:header>
+<x-layouts.app title="Community" headerless flush>
+    <div class="mx-auto max-w-md px-4 pt-3">
+        <div class="flex items-center gap-2">
+            <a href="{{ url()->previous() }}" data-page-back onclick="if (document.referrer && document.referrer.startsWith(location.origin)) { event.preventDefault(); history.back(); }" class="icon-pop grid size-11 place-items-center rounded-full" aria-label="{{ __('Back') }}"><x-lucide-chevron-left class="size-5" /></a>
+            <h1 class="flex-1 text-xl font-bold">Muslim Community</h1>
+            <x-ui.bell />
+        </div>
+        <nav class="mt-2 flex gap-5 border-b border-line text-sm font-semibold" aria-label="Community sections">
+            @foreach (['latest' => 'For You', 'following' => 'Following'] as $k => $l)
+                <a href="{{ route('app.community.index', ['tab' => $k]) }}" class="min-h-11 border-b-2 px-1 {{ $tab === $k ? 'border-[#128a49] text-[#128a49]' : 'border-transparent text-ink' }}">{{ $l }}</a>
+            @endforeach
+            <a href="{{ route('app.community.groups.index') }}" class="min-h-11 border-b-2 border-transparent px-1 text-ink">Groups</a>
+        </nav>
+    </div>
     <div class="mx-auto max-w-2xl space-y-4 py-5">
         @if ($restriction)
             <x-ui.alert type="warning" title="Your account is restricted">{{ $restriction->reason ?: 'A moderator has restricted some community features.' }} @if ($restriction->expires_at) This ends {{ $restriction->expires_at->diffForHumans() }}. @endif
@@ -31,6 +35,7 @@
             <x-ui.empty icon="messages-square" title="{{ $tab === 'following' ? 'Nothing from people you follow yet' : 'No posts yet' }}" text="{{ $tab === 'following' ? 'Follow people to see their posts here.' : 'Be the first to share something beneficial.' }}"><x-ui.button :href="route('app.community.people')" variant="outline">Find people</x-ui.button></x-ui.empty>
         @endforelse
         {{ $posts->links() }}
+        <a href="{{ route('app.community.people') }}" class="icon-pop fixed end-5 z-40 grid size-14 place-items-center rounded-full bg-[#128a49] text-white shadow-pop" style="bottom: calc(var(--safe-bottom) + 6.2rem)" aria-label="Find people"><x-lucide-plus class="size-6" /></a>
     </div>
     <x-community.report-sheet />
 </x-layouts.app>

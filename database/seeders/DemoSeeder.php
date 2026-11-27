@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -38,6 +39,11 @@ class DemoSeeder extends Seeder
         ]), fn (User $u) => $u->profile()->updateOrCreate([], ['username' => $username, 'city' => $city, 'country' => 'Nigeria']));
 
         $ahmed = $make('Ahmed Mohammed', 'ahmed@example.com', 'ahmed', 'Abuja');
+        $photo = public_path('images/demo-ahmed.jpg');
+        if (is_file($photo)) {
+            Storage::disk('public')->put('avatars/demo-ahmed.jpg', file_get_contents($photo));
+            $ahmed->forceFill(['avatar_path' => 'avatars/demo-ahmed.jpg'])->save();
+        }
         $amina = $make('Amina Yusuf', 'amina@example.com', 'amina', 'Lagos');
         $reminders = $make('Islamic Reminders', 'reminders@example.com', 'islamicreminders', 'Kano');
 

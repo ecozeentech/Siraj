@@ -23,28 +23,34 @@ class PaymentService
         return $this->gateway;
     }
 
-    public function initiate(User $user, string $purpose, int $amountKobo, ?Model $payable = null, array $meta = []): PaymentTransaction
+    public function initiate(User $user, string $purpose, int $amountKobo, ?Model $payable = null, array $meta = [], ?string $gateway = null): PaymentTransaction
     {
-        if (! $this->gateway->isConfigured()) {
-            throw new GatewayNotConfiguredException('Online payments are not configured yet. Please try again later.');
+        $slug = $gateway ?: 'paystack';
+        $driver = app(GatewayCatalog::class)->make($slug);
+        if (! $driver->isConfigured()) {
+            throw new GatewayNotConfiguredException('This payment method is not configured yet. Choose another one or ask an administrator to connect it.');
         }
         if ($amountKobo < 5000) {
             throw new RuntimeException('The minimum payment is ₦50.');
         }
 
         $tx = PaymentTransaction::query()->create([
-            'user_id' => $user->id, 'reference' => 'SIRAJ-'.Str::upper(Str::random(16)), 'gateway' => $this->gateway->name(),
-            'mode' => $this->gateway->mode(), 'purpose' => $purpose, 'payable_type' => $payable?->getMorphClass(), 'payable_id' => $payable?->getKey(),
+            'user_id' => $user->id, 'reference' => 'SIRAJ-'.Str::upper(Str::random(16)), 'gateway' => $driver->name(),
+            'mode' => $driver->mode(), 'purpose' => $purpose, 'payable_type' => $payable?->getMorphClass(), 'payable_id' => $payable?->getKey(),
             'amount_kobo' => $amountKobo, 'currency' => config('siraj.currency'), 'status' => 'pending', 'meta' => $meta ?: null,
         ]);
 
         try {
-            $init = $this->gateway->initialize($tx, $user->email, route('app.payments.callback'));
+            $init = $driver->initialize($tx, $user->email, route('app.payments.callback'));
         } catch (\Throwable $e) {
             $tx->update(['status' => 'failed', 'gateway_response' => ['error' => $e->getMessage()]]);
             throw $e;
         }
-        $tx->update(['authorization_url' => $init['authorization_url'], 'access_code' => $init['access_code']]);
+        $tx->update([
+            'authorization_url' => $init['authorization_url'],
+            'access_code' => $init['access_code'],
+            'gateway_reference' => $init['gateway_reference'] ?? null,
+        ]);
 
         return $tx;
     }
@@ -55,7 +61,7 @@ class PaymentService
         if ($tx->status === 'succeeded') {
             return $tx;
         }
-        $result = $this->gateway->verify($tx->reference);
+        $result = app(GatewayCatalog::class)->make($tx->gateway)->verify($tx->reference);
 
         return match ($result['status']) {
             'success' => $this->fulfil($tx, $result),

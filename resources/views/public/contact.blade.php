@@ -1,4 +1,4 @@
-<x-layouts.public title="Contact">
+<x-layouts.contextual title="Contact">
     <section class="mx-auto max-w-xl px-4 py-12">
         <h1 class="text-3xl font-bold">Contact us</h1>
         <p class="mt-2 text-muted">Questions, feedback or partnership enquiries — we read every message.</p>
@@ -11,4 +11,4 @@
             <x-ui.button type="submit" variant="primary" block>Send message</x-ui.button>
         </form>
     </section>
-</x-layouts.public>
+</x-layouts.contextual>

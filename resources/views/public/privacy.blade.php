@@ -1,4 +1,4 @@
-<x-layouts.public title="Privacy Policy">
+<x-layouts.contextual title="Privacy Policy">
     <article class="mx-auto max-w-3xl space-y-4 px-4 py-12 lg:px-8">
         <h1 class="text-3xl font-bold">Privacy Policy</h1>
         <x-ui.alert type="warning">This policy is a working draft prepared for product development. It must be reviewed by qualified legal counsel (including Nigerian NDPA 2023 compliance) before public launch.</x-ui.alert>
@@ -11,6 +11,6 @@
         <h2 class="pt-2 text-xl font-bold">Your controls</h2>
         <p class="leading-7 text-muted">You can edit or export your information, change privacy settings and request deletion of your account from Settings at any time.</p>
         <h2 class="pt-2 text-xl font-bold">Contact</h2>
-        <p class="leading-7 text-muted">Use the <a class="font-semibold text-forest-700 underline" href="{{ route('contact') }}">contact form</a> for privacy questions.</p>
+        <p class="leading-7 text-muted">Use the <a class="font-semibold text-forest-700 underline" href="{{ route(request()->routeIs('app.explore.*') ? 'app.explore.contact' : 'contact') }}">contact form</a> for privacy questions.</p>
     </article>
-</x-layouts.public>
+</x-layouts.contextual>

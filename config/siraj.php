@@ -11,7 +11,31 @@ return [
     'require_verified_email' => (bool) env('SIRAJ_REQUIRE_VERIFIED_EMAIL', true),
     'currency' => env('SIRAJ_DEFAULT_CURRENCY', 'NGN'),
 
-    'supported_locales' => ['en' => 'English'],
+    'supported_locales' => [
+        'en' => 'English',
+        'ha' => 'Hausa',
+        'yo' => 'Yorùbá',
+        'ar' => 'العربية',
+        'fr' => 'Français',
+        'es' => 'Español',
+        'pt' => 'Português',
+        'zh' => '中文',
+        'hi' => 'हिन्दी',
+        'id' => 'Bahasa Indonesia',
+        'ur' => 'اردو',
+        'bn' => 'বাংলা',
+        'ru' => 'Русский',
+        'tr' => 'Türkçe',
+        'sw' => 'Kiswahili',
+        'de' => 'Deutsch',
+    ],
+
+    'rtl_locales' => ['ar', 'ur'],
+
+    'stores' => [
+        'play' => env('SIRAJ_PLAY_STORE_URL', 'https://play.google.com/store/search?q=SIRAJ%20Muslim&c=apps'),
+        'apple' => env('SIRAJ_APP_STORE_URL', 'https://apps.apple.com/search?term=SIRAJ%20Muslim'),
+    ],
 
     'uploads' => [
         'image_max_kb' => 4096,

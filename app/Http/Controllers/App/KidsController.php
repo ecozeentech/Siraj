@@ -37,7 +37,11 @@ class KidsController extends Controller
         }
         $family = $request->user()->ownedFamilies()->first();
 
-        return view('app.kids.index', ['children' => $family ? $family->children()->get() : collect()]);
+        return view('app.kids.index', [
+            'children' => $family ? $family->children()->get() : collect(),
+            'games' => KidsGame::query()->where('is_published', true)->orderBy('sort')->limit(6)->get(),
+            'course' => KidsCourse::query()->where('is_published', true)->orderBy('sort')->first(),
+        ]);
     }
 
     public function home(Request $request)

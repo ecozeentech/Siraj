@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Finance\SubscriptionPlan;
 use App\Services\Finance\GatewayNotConfiguredException;
 use App\Services\Finance\InsufficientFundsException;
+use App\Services\Finance\GatewayCatalog;
 use App\Services\Finance\PaymentGateway;
 use App\Services\Finance\PaymentService;
 use App\Services\Finance\SubscriptionService;
@@ -13,20 +14,21 @@ use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
 {
-    public function index(Request $request, PaymentGateway $gateway)
+    public function index(Request $request, PaymentGateway $gateway, GatewayCatalog $catalog)
     {
         $user = $request->user();
+        $providers = $catalog->checkoutOptions();
 
         return view('app.subscription', [
             'plans' => SubscriptionPlan::query()->where('is_active', true)->orderBy('sort')->get(), 'current' => $user->activeSubscription?->load('plan'),
-            'balance' => (int) $user->wallet?->balance_kobo, 'gatewayReady' => $gateway->isConfigured(),
+            'balance' => (int) $user->wallet?->balance_kobo, 'gatewayReady' => $providers->isNotEmpty(), 'providers' => $providers,
         ]);
     }
 
     public function subscribe(Request $request, SubscriptionPlan $plan, SubscriptionService $subs, PaymentService $payments)
     {
         abort_unless($plan->is_active, 404);
-        $data = $request->validate(['method' => ['nullable', 'in:wallet,gateway']]);
+        $data = $request->validate(['method' => ['nullable', 'in:wallet,gateway'], 'gateway' => ['nullable', 'string', 'max:24']]);
         $user = $request->user();
         if ($user->activeSubscription?->subscription_plan_id === $plan->id && $plan->interval !== 'free') {
             return back()->withErrors(['method' => 'You are already on this plan.']);
@@ -43,7 +45,7 @@ class SubscriptionController extends Controller
 
                 return redirect()->route('app.subscription.index')->with('status', 'Welcome to '.$plan->name.'. Your plan is active.');
             }
-            $tx = $payments->initiate($user, 'subscription', (int) $plan->price_kobo, $plan, ['plan' => $plan->slug]);
+            $tx = $payments->initiate($user, 'subscription', (int) $plan->price_kobo, $plan, ['plan' => $plan->slug], $data['gateway'] ?? null);
 
             return redirect()->away($tx->authorization_url);
         } catch (InsufficientFundsException) {
